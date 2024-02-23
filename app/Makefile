@@ -1,3 +1,15 @@
+run-dist:
+	./build/install/app/bin/app
+
+run:
+	./gradlew run
+
+report:
+	./gradlew jacocoTestReport
+
+lint:
+	./gradlew checkstyleMain checkstyleTest
+
 check-deps:
 	./gradlew dependencyUpdates -Drevision=release
 
@@ -18,9 +30,6 @@ start: dev
 install:
 	./gradlew installDist
 
-lint:
-	./gradlew checkstyleMain
-
 test:
 	./gradlew test
 
@@ -29,5 +38,7 @@ image-build:
 
 image-push:
 	docker push hexletcomponents/java-javalin-example:latest
+
+build-run: build run
 
 .PHONY: build
