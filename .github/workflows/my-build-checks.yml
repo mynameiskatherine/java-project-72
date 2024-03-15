@@ -18,17 +18,21 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-    - name: setup java
+    - name: Setup java
       uses: actions/setup-java@v3
       with:
         java-version: '20'
         distribution: 'temurin'
-    - name: setup gradle
+    - name: Setup gradle
       uses: gradle/gradle-build-action@v2
       with:
           gradle-version: 8.3
           arguments: build
           build-root-directory: app
+    - name: Run linter
+      run: make lint
+    - name: Run test
+      run: make test
     - name: Publish code coverage
       uses: paambaati/codeclimate-action@v5.0.0
       env:
