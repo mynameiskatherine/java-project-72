@@ -9,11 +9,15 @@ plugins {
     id("com.github.ben-manes.versions") version "0.47.0"
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("se.patrikerdes.use-latest-versions") version "0.2.18"
-
+    id("application")
 }
 
 group = "hexlet.code"
 version = "1.0-SNAPSHOT"
+
+application {
+    mainClass = "hexlet.code.App"
+}
 
 repositories {
     mavenCentral()
