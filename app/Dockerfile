@@ -7,7 +7,7 @@ COPY build.gradle.kts .
 COPY settings.gradle.kts .
 COPY gradlew .
 
-RUN ./gradlew --no-daemon dependencies
+RUN ./gradlew --no-daemon shadowJar
 
 COPY src src
 COPY config config

@@ -22,7 +22,8 @@ application {
 tasks.jar {
     manifest {
         attributes(
-                "Main-Class" to application.mainClass
+                "Main-Class" to application.mainClass,
+                "Class-Path" to "/libs/*.jar"
         )
     }
 }
