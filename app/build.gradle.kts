@@ -2,21 +2,21 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
-    id("java")
-    id("checkstyle")
-    id("jacoco")
+    java
+    checkstyle
+    jacoco
+    application
     id("io.freefair.lombok") version "8.3"
     id("com.github.ben-manes.versions") version "0.47.0"
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("se.patrikerdes.use-latest-versions") version "0.2.18"
-    id("application")
 }
 
 group = "hexlet.code"
 version = "1.0-SNAPSHOT"
 
 application {
-    mainClass = "hexlet.code.App"
+    mainClass.set("hexlet.code.App")
 }
 
 repositories {
@@ -41,13 +41,13 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
-//    testLogging {
-//        exceptionFormat = TestExceptionFormat.FULL
-//        events = mutableSetOf(TestLogEvent.FAILED, TestLogEvent.PASSED, TestLogEvent.SKIPPED)
-//        // showStackTraces = true
-//        // showCauses = true
-//        showStandardStreams = true
-//    }
+    testLogging {
+        exceptionFormat = TestExceptionFormat.FULL
+        events = mutableSetOf(TestLogEvent.FAILED, TestLogEvent.PASSED, TestLogEvent.SKIPPED)
+        // showStackTraces = true
+        // showCauses = true
+        showStandardStreams = true
+    }
     finalizedBy(tasks.jacocoTestReport)
 }
 
