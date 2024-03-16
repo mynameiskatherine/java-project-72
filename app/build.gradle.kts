@@ -19,6 +19,14 @@ application {
     mainClass.set("hexlet.code.App")
 }
 
+tasks.jar {
+    manifest {
+        attributes(
+                "Main-Class" to application.mainClass
+        )
+    }
+}
+
 repositories {
     mavenCentral()
 }
