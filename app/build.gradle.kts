@@ -33,19 +33,19 @@ repositories {
 }
 
 dependencies {
-    implementation("com.h2database:h2:2.2.222")
-    implementation("com.zaxxer:HikariCP:5.0.1")
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.15.2")
-    implementation("org.apache.commons:commons-text:1.10.0")
-    implementation("gg.jte:jte:3.1.0")
+    implementation("com.h2database:h2:2.2.224")
+    implementation("com.zaxxer:HikariCP:5.1.0")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.16.1")
+    implementation("org.apache.commons:commons-text:1.11.0")
+    implementation("gg.jte:jte:3.1.9")
     implementation("org.slf4j:slf4j-simple:2.0.9")
-    implementation("io.javalin:javalin:5.6.2")
-    implementation("io.javalin:javalin-bundle:5.6.2")
-    implementation("io.javalin:javalin-rendering:5.6.2")
+    implementation("io.javalin:javalin:5.6.3")
+    implementation("io.javalin:javalin-bundle:5.6.3")
+    implementation("io.javalin:javalin-rendering:5.6.3")
 
-    testImplementation("org.assertj:assertj-core:3.24.2")
+    testImplementation("org.assertj:assertj-core:3.25.2")
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.1")
 }
 
 tasks.test {
@@ -53,8 +53,8 @@ tasks.test {
     testLogging {
         exceptionFormat = TestExceptionFormat.FULL
         events = mutableSetOf(TestLogEvent.FAILED, TestLogEvent.PASSED, TestLogEvent.SKIPPED)
-        // showStackTraces = true
-        // showCauses = true
+        showStackTraces = true
+        showCauses = true
         showStandardStreams = true
     }
     finalizedBy(tasks.jacocoTestReport)
