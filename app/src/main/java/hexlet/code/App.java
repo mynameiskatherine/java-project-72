@@ -54,8 +54,12 @@ public final class App {
     public static Javalin getApp() throws IOException {
         HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(getDbUrl());
+        hikariConfig.setUsername(System.getenv().getOrDefault("JDBC_DB_USERNAME", ""));
+        hikariConfig.setPassword(System.getenv().getOrDefault("JDBC_DB_PASSWORD", ""));
+        hikariConfig.setDataSourceClassName("org.postgresql.ds.PGSimpleDataSource");
 
         HikariDataSource dataSource = new HikariDataSource(hikariConfig);
+
 
         var sql = readFileFromResources("schema.sql");
 
