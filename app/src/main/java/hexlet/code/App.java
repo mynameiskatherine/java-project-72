@@ -56,7 +56,7 @@ public final class App {
         hikariConfig.setJdbcUrl(getDbUrl());
         hikariConfig.setUsername(System.getenv().getOrDefault("JDBC_DB_USERNAME", ""));
         hikariConfig.setPassword(System.getenv().getOrDefault("JDBC_DB_PASSWORD", ""));
-        hikariConfig.setDataSourceClassName("org.postgresql.ds.PGSimpleDataSource");
+        hikariConfig.setDriverClassName(org.postgresql.Driver.class.getName());
 
         HikariDataSource dataSource = new HikariDataSource(hikariConfig);
 
