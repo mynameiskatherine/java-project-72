@@ -61,7 +61,7 @@ public final class App {
         HikariDataSource dataSource = new HikariDataSource(hikariConfig);
 
 
-        var sql = readFileFromResources("schema.sql");
+        var sql = readFileFromResources("/schema.sql");
 
         log.info(sql);
 
