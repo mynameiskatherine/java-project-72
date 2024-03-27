@@ -2,7 +2,12 @@ package hexlet.code.repository;
 
 import hexlet.code.model.Url;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +16,7 @@ public class UrlRepository extends BaseRepository {
     public static void save(Url url) {
         String sql = "INSERT INTO urls (name, created_at) VALUES (?, ?)";
         try (Connection connection = dataSource.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, url.getName());
             preparedStatement.setTimestamp(2, Timestamp.valueOf(url.getCreatedAt()));
             preparedStatement.executeUpdate();
@@ -50,7 +55,7 @@ public class UrlRepository extends BaseRepository {
     public static Optional<Url> search(String name) {
         String sql = "SELECT * FROM urls WHERE name = ?";
         try (Connection connection = dataSource.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, name);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -70,7 +75,7 @@ public class UrlRepository extends BaseRepository {
     public static Optional<Url> find(Long id) {
         String sql = "SELECT * FROM urls WHERE id = ?";
         try (Connection connection = dataSource.getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
