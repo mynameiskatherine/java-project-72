@@ -17,8 +17,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.sql.Connection;
-import java.sql.Statement;
 import java.util.stream.Collectors;
 
 @Slf4j
