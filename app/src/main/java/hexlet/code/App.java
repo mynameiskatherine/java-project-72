@@ -54,8 +54,8 @@ public final class App {
     public static Javalin getApp() throws IOException {
         HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(getDbUrl());
-        hikariConfig.setUsername(System.getenv().getOrDefault("JDBC_DB_USERNAME", ""));
-        hikariConfig.setPassword(System.getenv().getOrDefault("JDBC_DB_PASSWORD", ""));
+//        hikariConfig.setUsername(System.getenv().getOrDefault("JDBC_DB_USERNAME", ""));
+//        hikariConfig.setPassword(System.getenv().getOrDefault("JDBC_DB_PASSWORD", ""));
         hikariConfig.setDriverClassName(org.postgresql.Driver.class.getName());
 
         HikariDataSource dataSource = new HikariDataSource(hikariConfig);
