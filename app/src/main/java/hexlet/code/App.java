@@ -61,16 +61,16 @@ public final class App {
         HikariDataSource dataSource = new HikariDataSource(hikariConfig);
 
 
-        var sql = readFileFromResources("/schema.sql");
-
-        log.info(sql);
-
-        try (Connection connection = dataSource.getConnection();
-             Statement statement = connection.createStatement()) {
-            statement.execute(sql);
-        } catch (Exception e) {
-            throw new RuntimeException();
-        }
+//        var sql = readFileFromResources("/schema.sql");
+//
+//        log.info(sql);
+//
+//        try (Connection connection = dataSource.getConnection();
+//             Statement statement = connection.createStatement()) {
+//            statement.execute(sql);
+//        } catch (Exception e) {
+//            throw new RuntimeException();
+//        }
 
         BaseRepository.dataSource = dataSource;
 
