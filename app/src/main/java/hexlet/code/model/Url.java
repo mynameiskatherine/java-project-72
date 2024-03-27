@@ -5,16 +5,17 @@ import lombok.Setter;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 public class Url {
     private long id;
     private String name;
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
 
-    public Url(String name) {
+    public Url(String name, LocalDateTime createdAt) {
         this.name = name;
-        this.createdAt = Timestamp.from(Instant.now());
+        this.createdAt = createdAt;
     }
 }
