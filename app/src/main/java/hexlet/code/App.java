@@ -17,6 +17,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.sql.Connection;
+import java.sql.Statement;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -31,46 +33,48 @@ public final class App {
         return Integer.valueOf(port);
     }
 
-    private static String getDbUrl() {
-        String dbUrl = System.getenv().getOrDefault("JDBC_DB_URL", "jdbc:h2:mem:project;DB_CLOSE_DELAY=-1;");
-        return dbUrl;
-    }
-
     private static TemplateEngine createTemplateEngine() {
         ClassLoader classLoader = App.class.getClassLoader();
         ResourceCodeResolver codeResolver = new ResourceCodeResolver("templates", classLoader);
         TemplateEngine templateEngine = TemplateEngine.create(codeResolver, ContentType.Html);
         return templateEngine;
     }
-    private static String readFileFromResources(String fileName) throws IOException {
+    public static String readFileFromResources(String fileName) throws IOException {
         URL url = App.class.getClassLoader().getResource(fileName);
         File file = new File(url.getFile());
         String sql = Files.lines(file.toPath()).collect(Collectors.joining("\n"));
         return sql;
     }
 
-    public static Javalin getApp() throws IOException {
+    private static void setDataSource() throws IOException {
         HikariConfig hikariConfig = new HikariConfig();
-        hikariConfig.setJdbcUrl(getDbUrl());
-        hikariConfig.setUsername(System.getenv().getOrDefault("JDBC_DB_USERNAME", ""));
-        hikariConfig.setPassword(System.getenv().getOrDefault("JDBC_DB_PASSWORD", ""));
-        hikariConfig.setDriverClassName(org.postgresql.Driver.class.getName());
+        HikariDataSource dataSource;
+        String dbUrl = System.getenv("JDBC_DB_URL");
+        if (dbUrl != null) {
+            hikariConfig.setJdbcUrl(dbUrl);
+            hikariConfig.setUsername(System.getenv().getOrDefault("JDBC_DB_USERNAME", ""));
+            hikariConfig.setPassword(System.getenv().getOrDefault("JDBC_DB_PASSWORD", ""));
+            hikariConfig.setDriverClassName(org.postgresql.Driver.class.getName());
+            dataSource = new HikariDataSource(hikariConfig);
+        } else {
+            hikariConfig.setJdbcUrl("jdbc:h2:mem:project;DB_CLOSE_DELAY=-1;");
+            dataSource = new HikariDataSource(hikariConfig);
+            var sql = readFileFromResources("schema.sql");
 
-        HikariDataSource dataSource = new HikariDataSource(hikariConfig);
+            log.info(sql);
 
-
-//        var sql = readFileFromResources("/schema.sql");
-//
-//        log.info(sql);
-//
-//        try (Connection connection = dataSource.getConnection();
-//             Statement statement = connection.createStatement()) {
-//            statement.execute(sql);
-//        } catch (Exception e) {
-//            throw new RuntimeException();
-//        }
-
+            try (Connection connection = dataSource.getConnection();
+                 Statement statement = connection.createStatement()) {
+                statement.execute(sql);
+            } catch (Exception e) {
+                throw new RuntimeException();
+            }
+        }
         BaseRepository.dataSource = dataSource;
+    }
+
+    public static Javalin getApp() throws IOException {
+        setDataSource();
 
         Javalin app = Javalin.create(config -> {
             config.plugins.enableDevLogging();
