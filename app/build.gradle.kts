@@ -43,10 +43,13 @@ dependencies {
     implementation("io.javalin:javalin:5.6.3")
     implementation("io.javalin:javalin-bundle:5.6.3")
     implementation("io.javalin:javalin-rendering:5.6.3")
+    implementation("com.konghq:unirest-java:3.14.5")
+    compileOnly("com.konghq:unirest-java-core:4.3.0")
 
     testImplementation("org.assertj:assertj-core:3.25.2")
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.1")
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
 }
 
 tasks.test {

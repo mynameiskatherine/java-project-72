@@ -3,6 +3,8 @@ package hexlet.code.controller;
 import hexlet.code.dto.url.UrlPage;
 import hexlet.code.dto.url.UrlsPage;
 import hexlet.code.model.Url;
+import hexlet.code.model.UrlCheck;
+import hexlet.code.repository.UrlCheckRepository;
 import hexlet.code.repository.UrlRepository;
 import hexlet.code.util.NamedRoutes;
 import io.javalin.http.Context;
@@ -12,6 +14,7 @@ import java.net.URI;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.List;
 
 public class UrlController {
     public static void index(Context ctx) {
@@ -52,7 +55,8 @@ public class UrlController {
     public static void show(Context ctx) {
         Long id = ctx.pathParamAsClass("id", Long.class).get();
         Url url = UrlRepository.find(id).orElseThrow(() -> new NotFoundResponse("No such id found"));
-        UrlPage page = new UrlPage(url);
+        List<UrlCheck> checksList = UrlCheckRepository.getEntitiesByUrlId(id);
+        UrlPage page = new UrlPage(url, checksList);
         page.setFlashMessage(ctx.consumeSessionAttribute("flash-message"));
         page.setFlashType(ctx.consumeSessionAttribute("flash-type"));
         ctx.render("urls/show.jte", Collections.singletonMap("pageData", page));

@@ -1,6 +1,7 @@
 @import hexlet.code.dto.url.UrlPage
-@import hexlet.code.model.Url
+@import hexlet.code.model.UrlCheck
 @import hexlet.code.util.NamedRoutes
+@import java.time.format.DateTimeFormatter
 @param UrlPage pageData
 
 @template.layout.page(
@@ -50,7 +51,9 @@ header = @`
                     </tbody>
                 </table>
                 <h2 class="pt-5">Check results</h2>
-                <button type="submit" class="h-100 btn btn-primary btn-lg">Start check</button>
+                <form action="${NamedRoutes.urlCheckPath(pageData.getUrl().getId())}", method="post">
+                    <button type="submit" class="h-100 btn btn-primary btn-lg">Start check</button>
+                </form>
                 <table class="table table-responsive-sm table-striped table-hover">
                     <thead>
                         <tr>
@@ -63,19 +66,19 @@ header = @`
                         </tr>
                     </thead>
                     <tbody>
-                    @if (pageData.getCheckResult().isEmpty())
+                    @if (pageData.getChecksList().isEmpty())
                         <tr>
                             <td colspan="6">No check records found</td>
                         </tr>
                     @else
-                        @for (String check : pageData.getCheckResult())
+                        @for (UrlCheck check : pageData.getChecksList())
                             <tr>
-                                <td>${check}</td>
-                                <td>${check}</td>
-                                <td>${check}</td>
-                                <td>${check}</td>
-                                <td>${check}</td>
-                                <td>${check}</td>
+                                <td>${check.getId()}</td>
+                                <td>${check.getStatusCode()}</td>
+                                <td>${check.getTitle()}</td>
+                                <td>${check.getH1()}</td>
+                                <td>${check.getDescription()}</td>
+                                <td>${check.getCreatedAt().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))}</td>
                             </tr>
                         @endfor
                     @endif
