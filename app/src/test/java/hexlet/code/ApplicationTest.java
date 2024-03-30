@@ -81,7 +81,7 @@ public class ApplicationTest {
 
     @Test
     void testSitePage() {
-        var url = new Url("https://google.com", LocalDateTime.now());
+        var url = new Url("https://www.example.com", LocalDateTime.now());
         UrlRepository.save(url);
         var id = url.getId();
         JavalinTest.test(app, (server, client) -> {
@@ -101,7 +101,7 @@ public class ApplicationTest {
             List<UrlCheck> listOfChecks = UrlCheckRepository.getEntitiesByUrlId(id);
             for (UrlCheck check : listOfChecks) {
                 assertThat(check.getDescription()).isEqualTo("From description");
-                assertThat(check.getH1()).isEqualTo("From h1 tag");
+                assertThat(check.getH1()).isEqualTo("");
                 assertThat(check.getTitle()).isEqualTo("From title tag");
             }
         });

@@ -1,7 +1,9 @@
 package hexlet.code.repository;
 
 import hexlet.code.model.UrlCheck;
+import hexlet.code.util.Utils;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -43,6 +45,31 @@ public class UrlCheckRepository extends BaseRepository {
             ResultSet resultSet = preparedStatement.executeQuery();
             List<UrlCheck> result = new ArrayList<>();
             while (resultSet.next()) {
+                Long id = resultSet.getLong("id");
+                Integer statusCode = resultSet.getInt("status_code");
+                String title = resultSet.getString("title");
+                String h1 = resultSet.getString("h1");
+                String description = resultSet.getString("description");
+                Timestamp createdAt = resultSet.getTimestamp("created_at");
+                UrlCheck urlCheck = new UrlCheck(urlId, statusCode, title,
+                        h1, description, createdAt.toLocalDateTime());
+                urlCheck.setId(id);
+                result.add(urlCheck);
+            }
+            return result;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static List<UrlCheck> getOnlyLastEntities() throws IOException {
+        String sql = Utils.getFixture("getOnlyLastChecks.sql");
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<UrlCheck> result = new ArrayList<>();
+            while (resultSet.next()) {
+                Long urlId = resultSet.getLong("url_id");
                 Long id = resultSet.getLong("id");
                 Integer statusCode = resultSet.getInt("status_code");
                 String title = resultSet.getString("title");

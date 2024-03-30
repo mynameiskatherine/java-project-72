@@ -35,9 +35,9 @@
                 <p>Check your website for SEO for free</p>
                 <form class="row text-body" action="${NamedRoutes.urlsPath()}" method="post">
                     <div class="col">
-                        <div class="form-floating w-100">
+                        <div class="form-floating w-100 text--body-secondary">
                             <input type="text" class="form-control" id="floatingInputUrl"
-                                   placeholder="For example: https://www.example.ru" name="url" required>
+                                   placeholder="For example: https://www.example.com" name="url" required>
                             <label for="floatingInputUrl">URL</label>
                         </div>
                     </div>
@@ -45,7 +45,7 @@
                         <button type="submit" class="h-100 btn btn-primary btn-lg">Submit</button>
                     </div>
                 </form>
-                <p class="text-white-50"><small>For example: https://www.example.ru</small></p>
+                <p class="text-white-50"><small>For example: https://www.example.com</small></p>
             </div>
         </div>
     </div>

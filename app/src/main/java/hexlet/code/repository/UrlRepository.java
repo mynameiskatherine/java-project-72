@@ -29,7 +29,6 @@ public class UrlRepository extends BaseRepository {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
     }
 
     public static List<Url> getEntities() {

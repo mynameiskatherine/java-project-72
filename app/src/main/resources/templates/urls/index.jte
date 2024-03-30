@@ -1,7 +1,9 @@
 @import hexlet.code.dto.url.UrlsPage
 @import hexlet.code.model.Url
+@import hexlet.code.model.UrlCheck
 @import hexlet.code.util.NamedRoutes
 @import java.time.format.DateTimeFormatter
+@import java.util.stream.Collectors
 @param UrlsPage pageData
 
 @template.layout.page(
@@ -53,8 +55,14 @@ header = @`
                         <tr>
                             <td>${url.getId()}</td>
                             <td><a href="${NamedRoutes.urlPath(url.getId())}">${url.getName()}</a></td>
-                            <td>${url.getCreatedAt().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))}</td>
-                            <td></td>
+                            <td>${pageData.getLastUrlChecksList().stream()
+                                    .filter(e -> e.getUrlId().equals(url.getId()))
+                                    .map(c -> c.getCreatedAt().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
+                                    .collect(Collectors.joining())}</td>
+                            <td>${pageData.getLastUrlChecksList().stream()
+                                    .filter(e -> e.getUrlId().equals(url.getId()))
+                                    .map(c -> String.valueOf(c.getStatusCode()))
+                                    .collect(Collectors.joining())}</td>
                         </tr>
                         @endfor
                     @endif

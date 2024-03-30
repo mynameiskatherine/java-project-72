@@ -46,7 +46,7 @@ header = @`
                         </tr>
                         <tr>
                             <th scope="row">created at</th>
-                            <td>${String.valueOf(pageData.getUrl().getCreatedAt())}</td>
+                            <td>${pageData.getUrl().getCreatedAt().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))}</td>
                         </tr>
                     </tbody>
                 </table>

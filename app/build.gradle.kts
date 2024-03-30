@@ -43,6 +43,7 @@ dependencies {
     implementation("io.javalin:javalin:5.6.3")
     implementation("io.javalin:javalin-bundle:5.6.3")
     implementation("io.javalin:javalin-rendering:5.6.3")
+    implementation("org.jsoup:jsoup:1.17.2")
     implementation("com.konghq:unirest-java:3.14.5")
     compileOnly("com.konghq:unirest-java-core:4.3.0")
 

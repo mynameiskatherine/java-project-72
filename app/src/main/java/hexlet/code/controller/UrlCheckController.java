@@ -9,10 +9,11 @@ import io.javalin.http.Context;
 import io.javalin.http.NotFoundResponse;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import java.time.LocalDateTime;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class UrlCheckController {
 
@@ -24,28 +25,21 @@ public class UrlCheckController {
             HttpResponse<String> response = Unirest.get(url.getName()).asString();
             int responseStatus = response.getStatus();
             String responseBody = response.getBody();
-            String title = parseBody(responseBody, "(?<=<title>).*(?=</title>)");
-            String description = parseBody(responseBody, "(?<=<meta name=\"description\" content=\").*(?=\">)");
-            String h1 = parseBody(responseBody, "(?<=>)(?<=>).*(?=</h1>)");
+            Document body = Jsoup.parse(responseBody);
+            String title = body.title();
+            Element h1Tag = body.selectFirst("h1");
+            String h1 = (h1Tag != null) ? h1Tag.text() : "";
+            Element descriptionTag = body.selectFirst("meta[name=\"description\"][content]");
+            String description = (descriptionTag != null) ? descriptionTag.attr("content") : "";
             UrlCheck urlCheck = new UrlCheck(urlId, responseStatus, title, h1, description, LocalDateTime.now());
             UrlCheckRepository.save(urlCheck);
             ctx.sessionAttribute("flash-message", "Site successfully checked!");
             ctx.sessionAttribute("flash-type", "success");
             ctx.redirect(NamedRoutes.urlPath(urlId));
         } catch (Exception e) {
-            ctx.sessionAttribute("flash-message", "URL is incorrect. Please try with another one.");
+            ctx.sessionAttribute("flash-message", "URL is incorrect or unreachable. Please try with another one.");
             ctx.sessionAttribute("flash-type", "danger");
             ctx.redirect(NamedRoutes.urlPath(urlId));
         }
-    }
-
-    private static String parseBody(String responseBody, String regexp) {
-        Pattern patternTitle = Pattern.compile(regexp);
-        Matcher matcher = patternTitle.matcher(responseBody);
-        String result = "";
-        if (matcher.find()) {
-            result = matcher.group();
-        }
-        return result;
     }
 }

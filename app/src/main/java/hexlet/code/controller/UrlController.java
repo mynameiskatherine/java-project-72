@@ -10,6 +10,7 @@ import hexlet.code.util.NamedRoutes;
 import io.javalin.http.Context;
 import io.javalin.http.NotFoundResponse;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -17,9 +18,10 @@ import java.util.Collections;
 import java.util.List;
 
 public class UrlController {
-    public static void index(Context ctx) {
+    public static void index(Context ctx) throws IOException {
         var urlsList = UrlRepository.getEntities();
-        UrlsPage page = new UrlsPage(urlsList);
+        var lastUrlChecksList = UrlCheckRepository.getOnlyLastEntities();
+        UrlsPage page = new UrlsPage(urlsList, lastUrlChecksList);
         page.setFlashMessage(ctx.consumeSessionAttribute("flash-message"));
         page.setFlashType(ctx.consumeSessionAttribute("flash-type"));
         ctx.render("urls/index.jte", Collections.singletonMap("pageData", page));
@@ -28,13 +30,11 @@ public class UrlController {
     public static void create(Context ctx) {
         try {
             String url = ctx.formParam("url");
-            assert url != null;
             URL formatedUrl = new URI(url).toURL();
             String protocol = formatedUrl.getProtocol();
             String hostPort = formatedUrl.getAuthority();
-            assert protocol != null && hostPort != null;
             String urlToSave = protocol + "://" + hostPort;
-            if (!UrlRepository.search(urlToSave).isPresent()) {
+            if (UrlRepository.search(urlToSave).isEmpty()) {
                 Url urlRecord = new Url(urlToSave, LocalDateTime.now());
                 UrlRepository.save(urlRecord);
                 ctx.sessionAttribute("flash-message", "New record successfully added!");
