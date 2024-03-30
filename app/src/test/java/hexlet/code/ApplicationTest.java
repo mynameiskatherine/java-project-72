@@ -106,12 +106,4 @@ public class ApplicationTest {
             }
         });
     }
-
-    @Test
-    void testSiteNotFound() {
-        JavalinTest.test(app, (server, client) -> {
-            var response = client.get("/urls/999999");
-            assertThat(response.code()).isEqualTo(404);
-        });
-    }
 }

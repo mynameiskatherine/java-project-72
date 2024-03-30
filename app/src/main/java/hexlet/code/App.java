@@ -10,17 +10,14 @@ import hexlet.code.controller.UrlCheckController;
 import hexlet.code.controller.UrlController;
 import hexlet.code.repository.BaseRepository;
 import hexlet.code.util.NamedRoutes;
+import hexlet.code.util.Utils;
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinJte;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.Statement;
-import java.util.stream.Collectors;
 
 @Slf4j
 public final class App {
@@ -40,12 +37,6 @@ public final class App {
         TemplateEngine templateEngine = TemplateEngine.create(codeResolver, ContentType.Html);
         return templateEngine;
     }
-    public static String readFileFromResources(String fileName) throws IOException {
-        URL url = App.class.getClassLoader().getResource(fileName);
-        File file = new File(url.getFile());
-        String sql = Files.lines(file.toPath()).collect(Collectors.joining("\n"));
-        return sql;
-    }
 
     private static void setDataSource() throws IOException {
         HikariConfig hikariConfig = new HikariConfig();
@@ -53,14 +44,14 @@ public final class App {
         String dbUrl = System.getenv("JDBC_DB_URL");
         if (dbUrl != null) {
             hikariConfig.setJdbcUrl(dbUrl);
-            hikariConfig.setUsername(System.getenv().getOrDefault("JDBC_DB_USERNAME", ""));
-            hikariConfig.setPassword(System.getenv().getOrDefault("JDBC_DB_PASSWORD", ""));
+            hikariConfig.setUsername(System.getenv().get("JDBC_DB_USERNAME"));
+            hikariConfig.setPassword(System.getenv().get("JDBC_DB_PASSWORD"));
             hikariConfig.setDriverClassName(org.postgresql.Driver.class.getName());
             dataSource = new HikariDataSource(hikariConfig);
         } else {
             hikariConfig.setJdbcUrl("jdbc:h2:mem:project;DB_CLOSE_DELAY=-1;");
             dataSource = new HikariDataSource(hikariConfig);
-            var sql = readFileFromResources("schema.sql");
+            var sql = Utils.getFixture("schema.sql");
 
             log.info(sql);
 
