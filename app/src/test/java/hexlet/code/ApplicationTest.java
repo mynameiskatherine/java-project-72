@@ -71,11 +71,11 @@ public class ApplicationTest {
     @Test
     void testAddingSitePages() {
         JavalinTest.test(app, (server, client) -> {
-            var requestBody = "url=https%3A%2F%2Fwww.example.ru";
+            var requestBody = "url=https%3A%2F%2Fwww.example.com";
             var response = client.post("/urls", requestBody);
             var saved = UrlRepository.search("https://www.example.com");
             assertThat(response.code()).isEqualTo(200);
-            assertThat(saved.isPresent());
+            assertThat(saved).isPresent();
         });
     }
 

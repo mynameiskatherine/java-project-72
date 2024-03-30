@@ -21,7 +21,6 @@ public class UrlCheckController {
         Url url = UrlRepository.find(urlId).orElseThrow(() -> new NotFoundResponse("No such id found"));
 
         try {
-            Unirest.config().connectTimeout(100000);
             HttpResponse<String> response = Unirest.get(url.getName()).asString();
             int responseStatus = response.getStatus();
             String responseBody = response.getBody();
