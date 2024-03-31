@@ -112,6 +112,7 @@ public class ApplicationTest {
             var response = client.post("/urls/" + savedUrl.getId() + "/checks");
             assertThat(response.code()).isEqualTo(200);
             List<UrlCheck> listOfChecks = UrlCheckRepository.getEntitiesByUrlId(savedUrl.getId());
+            assertThat(listOfChecks).isNotEmpty();
             for (UrlCheck check : listOfChecks) {
                 assertThat(check.getDescription()).isEqualTo("From description");
                 assertThat(check.getH1()).isEqualTo("");

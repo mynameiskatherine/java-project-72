@@ -46,8 +46,8 @@ public final class App {
         String dbUrl = System.getenv("JDBC_DATABASE_URL");
         if (dbUrl != null) {
             hikariConfig.setJdbcUrl(dbUrl);
-//            hikariConfig.setUsername(System.getenv().get("JDBC_DB_USERNAME"));
-//            hikariConfig.setPassword(System.getenv().get("JDBC_DB_PASSWORD"));
+            hikariConfig.setUsername(System.getenv().get("JDBC_DATABASE_USERNAME"));
+            hikariConfig.setPassword(System.getenv().get("JDBC_DATABASE_PASSWORD"));
             hikariConfig.setDriverClassName(org.postgresql.Driver.class.getName());
             sql = Utils.readFileFromResources("schema.sql");
         } else {
