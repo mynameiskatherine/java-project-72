@@ -42,27 +42,30 @@ public final class App {
     public static void setDataSource() throws IOException {
         HikariConfig hikariConfig = new HikariConfig();
         HikariDataSource dataSource;
+        String sql;
         String dbUrl = System.getenv("JDBC_DATABASE_URL");
         if (dbUrl != null) {
             hikariConfig.setJdbcUrl(dbUrl);
-            hikariConfig.setUsername(System.getenv().get("JDBC_DB_USERNAME"));
-            hikariConfig.setPassword(System.getenv().get("JDBC_DB_PASSWORD"));
-            hikariConfig.setDriverClassName(org.postgresql.Driver.class.getName());
-            dataSource = new HikariDataSource(hikariConfig);
+//            hikariConfig.setUsername(System.getenv().get("JDBC_DB_USERNAME"));
+//            hikariConfig.setPassword(System.getenv().get("JDBC_DB_PASSWORD"));
+//            hikariConfig.setDriverClassName(org.postgresql.Driver.class.getName());
+            sql = Utils.readFileFromResources("schemaPostgres.sql");
         } else {
             hikariConfig.setJdbcUrl("jdbc:h2:mem:project;DB_CLOSE_DELAY=-1;");
-            dataSource = new HikariDataSource(hikariConfig);
-            var sql = Utils.readFileFromResources("schema.sql");
-
-            log.info(sql);
-
-            try (Connection connection = dataSource.getConnection();
-                 Statement statement = connection.createStatement()) {
-                statement.execute(sql);
-            } catch (Exception e) {
-                throw new RuntimeException();
-            }
+            sql = Utils.readFileFromResources("schema.sql");
         }
+
+        dataSource = new HikariDataSource(hikariConfig);
+
+        log.info(sql);
+
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement()) {
+            statement.execute(sql);
+        } catch (Exception e) {
+            throw new RuntimeException();
+        }
+
         BaseRepository.dataSource = dataSource;
     }
 
