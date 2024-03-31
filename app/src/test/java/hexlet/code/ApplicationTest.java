@@ -57,6 +57,7 @@ public class ApplicationTest {
         JavalinTest.test(app, (server, client) -> {
             var response = client.get("/");
             assertThat(response.code()).isEqualTo(200);
+            assertThat(response.body().string()).contains("Page Analyzer");
         });
     }
 
@@ -65,15 +66,17 @@ public class ApplicationTest {
         JavalinTest.test(app, (server, client) -> {
             var response = client.get("/urls");
             assertThat(response.code()).isEqualTo(200);
+            assertThat(response.body().string()).contains("Sites");
         });
     }
 
     @Test
-    void testAddingSitePages() {
+    void testAddingSitePage() {
         JavalinTest.test(app, (server, client) -> {
-            var requestBody = "url=https%3A%2F%2Fwww.example.com";
+            var url = testUrl.replaceAll("/$", "");
+            var requestBody = "url=" + url;
             var response = client.post("/urls", requestBody);
-            var saved = UrlRepository.search("https://www.example.com");
+            var saved = UrlRepository.search(url);
             assertThat(response.code()).isEqualTo(200);
             assertThat(saved).isPresent();
         });
@@ -91,14 +94,23 @@ public class ApplicationTest {
     }
 
     @Test
-    void testSiteChecks() {
-        var url = new Url(testUrl, LocalDateTime.now());
-        UrlRepository.save(url);
-        var id = url.getId();
+    void testSiteNotFound() throws Exception {
         JavalinTest.test(app, (server, client) -> {
-            var response = client.post(NamedRoutes.urlCheckPath(id));
+            var response = client.get("/urls/999999");
+            assertThat(response.code()).isEqualTo(404);
+        });
+    }
+
+    @Test
+    void testSiteChecks() {
+        JavalinTest.test(app, (server, client) -> {
+            var url = testUrl.replaceAll("/$", "");
+            var requestBody = "url=" + url;
+            assertThat(client.post("/urls", requestBody).code()).isEqualTo(200);
+            Long savedUrlId = UrlRepository.search(url).get().getId();
+            var response = client.post(NamedRoutes.urlCheckPath(savedUrlId));
             assertThat(response.code()).isEqualTo(200);
-            List<UrlCheck> listOfChecks = UrlCheckRepository.getEntitiesByUrlId(id);
+            List<UrlCheck> listOfChecks = UrlCheckRepository.getEntitiesByUrlId(savedUrlId);
             for (UrlCheck check : listOfChecks) {
                 assertThat(check.getDescription()).isEqualTo("From description");
                 assertThat(check.getH1()).isEqualTo("");
