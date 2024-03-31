@@ -4,7 +4,6 @@ import hexlet.code.model.Url;
 import hexlet.code.model.UrlCheck;
 import hexlet.code.repository.UrlCheckRepository;
 import hexlet.code.repository.UrlRepository;
-import hexlet.code.util.NamedRoutes;
 import io.javalin.Javalin;
 import io.javalin.testtools.JavalinTest;
 import okhttp3.mockwebserver.MockResponse;
@@ -107,10 +106,10 @@ public class ApplicationTest {
             var url = testUrl.replaceAll("/$", "");
             var requestBody = "url=" + url;
             assertThat(client.post("/urls", requestBody).code()).isEqualTo(200);
-            Long savedUrlId = UrlRepository.search(url).get().getId();
-            var response = client.post(NamedRoutes.urlCheckPath(savedUrlId));
+            Url savedUrl = UrlRepository.search(url).get();
+            var response = client.post("/urls/" + savedUrl.getId() + "/checks");
             assertThat(response.code()).isEqualTo(200);
-            List<UrlCheck> listOfChecks = UrlCheckRepository.getEntitiesByUrlId(savedUrlId);
+            List<UrlCheck> listOfChecks = UrlCheckRepository.getEntitiesByUrlId(savedUrl.getId());
             for (UrlCheck check : listOfChecks) {
                 assertThat(check.getDescription()).isEqualTo("From description");
                 assertThat(check.getH1()).isEqualTo("");
