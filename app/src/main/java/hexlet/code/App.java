@@ -41,7 +41,7 @@ public final class App {
     private static void setDataSource() throws IOException {
         HikariConfig hikariConfig = new HikariConfig();
         HikariDataSource dataSource;
-        String dbUrl = System.getenv("JDBC_DB_URL");
+        String dbUrl = System.getenv("JDBC_DATABASE_URL");
         if (dbUrl != null) {
             hikariConfig.setJdbcUrl(dbUrl);
             hikariConfig.setUsername(System.getenv().get("JDBC_DB_USERNAME"));

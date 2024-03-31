@@ -106,6 +106,7 @@ public class ApplicationTest {
             var url = testUrl.replaceAll("/$", "");
             var requestBody = "url=" + url;
             assertThat(client.post("/urls", requestBody).code()).isEqualTo(200);
+            assertThat(UrlRepository.search(url)).isNotNull();
             Url savedUrl = UrlRepository.search(url).get();
             var response = client.post("/urls/" + savedUrl.getId() + "/checks");
             assertThat(response.code()).isEqualTo(200);
