@@ -63,7 +63,7 @@ public class UrlCheckRepository extends BaseRepository {
     }
 
     public static List<UrlCheck> getOnlyLastEntities() throws IOException {
-        String sql = Utils.getFixture("getOnlyLastChecks.sql");
+        String sql = Utils.readFileFromResources("getOnlyLastChecks.sql");
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             ResultSet resultSet = preparedStatement.executeQuery();

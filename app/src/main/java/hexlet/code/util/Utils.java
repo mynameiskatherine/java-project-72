@@ -1,26 +1,26 @@
 package hexlet.code.util;
 
-import hexlet.code.App;
-
-import java.io.File;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.stream.Collectors;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class Utils {
-    public static String getFixture(String fileName) throws IOException {
-        Path path = Paths.get("src/main/resources/fixtures/" + fileName).toAbsolutePath().normalize();
-        return new String(Files.readAllBytes(path));
-    }
 
     public static String readFileFromResources(String fileName) throws IOException {
-        URL url = App.class.getClassLoader().getResource(fileName);
-        File file = new File(url.getFile());
-        String sql = Files.lines(file.toPath()).collect(Collectors.joining("\n"));
-        return sql;
+        InputStream stream = Utils.class.getClassLoader().getResourceAsStream("fixtures/" + fileName);
+        StringBuilder stringBuilder = new StringBuilder();
+        if (stream != null) {
+            try (InputStreamReader reader = new InputStreamReader(stream);
+                 BufferedReader bufferedReader = new BufferedReader(reader)) {
+                while (bufferedReader.ready()) {
+                    stringBuilder.append(bufferedReader.readLine());
+                }
+            }
+        } else {
+            throw new IllegalArgumentException("no data in stream");
+        }
+        return stringBuilder.toString();
     }
 
 }

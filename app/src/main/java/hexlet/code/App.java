@@ -51,7 +51,7 @@ public final class App {
         } else {
             hikariConfig.setJdbcUrl("jdbc:h2:mem:project;DB_CLOSE_DELAY=-1;");
             dataSource = new HikariDataSource(hikariConfig);
-            var sql = Utils.getFixture("schema.sql");
+            var sql = Utils.readFileFromResources("schema.sql");
 
             log.info(sql);
 
