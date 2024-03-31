@@ -49,10 +49,10 @@ public final class App {
 //            hikariConfig.setUsername(System.getenv().get("JDBC_DB_USERNAME"));
 //            hikariConfig.setPassword(System.getenv().get("JDBC_DB_PASSWORD"));
             hikariConfig.setDriverClassName(org.postgresql.Driver.class.getName());
-            sql = Utils.readFileFromResources("schemaPostgres.sql");
+            sql = Utils.readFileFromResources("schema.sql");
         } else {
             hikariConfig.setJdbcUrl("jdbc:h2:mem:project;DB_CLOSE_DELAY=-1;");
-            sql = Utils.readFileFromResources("schema.sql");
+            sql = Utils.readFileFromResources("schemaH2.sql");
         }
 
         dataSource = new HikariDataSource(hikariConfig);
