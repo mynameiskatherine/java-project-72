@@ -44,6 +44,7 @@ public class ApplicationTest {
     @BeforeEach
     void setUp() throws IOException {
         app = App.getApp();
+        App.setDataSource();
     }
 
     @AfterAll

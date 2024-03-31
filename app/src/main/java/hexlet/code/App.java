@@ -22,6 +22,7 @@ import java.sql.Statement;
 @Slf4j
 public final class App {
     public static void main(String[] args) throws IOException {
+        setDataSource();
         Javalin app = getApp();
         app.start(getPort());
     }
@@ -38,7 +39,7 @@ public final class App {
         return templateEngine;
     }
 
-    private static void setDataSource() throws IOException {
+    public static void setDataSource() throws IOException {
         HikariConfig hikariConfig = new HikariConfig();
         HikariDataSource dataSource;
         String dbUrl = System.getenv("JDBC_DATABASE_URL");
@@ -65,8 +66,8 @@ public final class App {
         BaseRepository.dataSource = dataSource;
     }
 
-    public static Javalin getApp() throws IOException {
-        setDataSource();
+    public static Javalin getApp() {
+
 
         Javalin app = Javalin.create(config -> {
             config.bundledPlugins.enableDevLogging();
