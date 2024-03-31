@@ -69,7 +69,7 @@ public final class App {
         setDataSource();
 
         Javalin app = Javalin.create(config -> {
-            config.plugins.enableDevLogging();
+            config.bundledPlugins.enableDevLogging();
             config.fileRenderer(new JavalinJte(createTemplateEngine()));
         });
 
