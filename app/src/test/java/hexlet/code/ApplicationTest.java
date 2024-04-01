@@ -22,7 +22,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ApplicationTest {
+public final class ApplicationTest {
     static Javalin app;
     static MockWebServer testServer;
     static String testUrl;

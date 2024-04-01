@@ -67,31 +67,7 @@ public final class App {
     }
 
     public static Javalin getApp() throws IOException {
-        HikariConfig hikariConfig = new HikariConfig();
-        HikariDataSource dataSource;
-        String sql;
-        String dbUrl = System.getenv("JDBC_DATABASE_URL");
-        if (dbUrl != null) {
-            hikariConfig.setJdbcUrl(dbUrl);
-            hikariConfig.setUsername(System.getenv().get("JDBC_DATABASE_USERNAME"));
-            hikariConfig.setPassword(System.getenv().get("JDBC_DATABASE_PASSWORD"));
-            hikariConfig.setDriverClassName(org.postgresql.Driver.class.getName());
-        } else {
-            hikariConfig.setJdbcUrl("jdbc:h2:mem:project;DB_CLOSE_DELAY=-1;");
-        }
-        sql = Utils.readFileFromResources("schema.sql");
-        dataSource = new HikariDataSource(hikariConfig);
-
-        log.info(sql);
-
-        try (Connection connection = dataSource.getConnection();
-             Statement statement = connection.createStatement()) {
-            statement.execute(sql);
-        } catch (Exception e) {
-            throw new RuntimeException();
-        }
-
-        BaseRepository.dataSource = dataSource;
+        setDataSource();
 
         Javalin app = Javalin.create(config -> {
             config.bundledPlugins.enableDevLogging();
