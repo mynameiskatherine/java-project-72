@@ -3,7 +3,6 @@
 @import hexlet.code.model.UrlCheck
 @import hexlet.code.util.NamedRoutes
 @import java.time.format.DateTimeFormatter
-@import java.util.stream.Collectors
 @param UrlsPage pageData
 
 @template.layout.page(
@@ -55,14 +54,13 @@ header = @`
                         <tr>
                             <td>${url.getId()}</td>
                             <td><a href="${NamedRoutes.urlPath(url.getId())}">${url.getName()}</a></td>
-                            <td>${pageData.getLastUrlChecksList().stream()
-                                    .filter(e -> e.getUrlId().equals(url.getId()))
-                                    .map(c -> c.getCreatedAt().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
-                                    .collect(Collectors.joining())}</td>
-                            <td>${pageData.getLastUrlChecksList().stream()
-                                    .filter(e -> e.getUrlId().equals(url.getId()))
-                                    .map(c -> String.valueOf(c.getStatusCode()))
-                                    .collect(Collectors.joining())}</td>
+                            @if (pageData.getUrlLastChecksMap().get(url.getId()) != null)
+                                <td>${pageData.getUrlLastChecksMap().get(url.getId()).getCreatedAt().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))}</td>
+                                <td>${pageData.getUrlLastChecksMap().get(url.getId()).getStatusCode()}</td>
+                            @else
+                                <td></td>
+                                <td></td>
+                            @endif
                         </tr>
                         @endfor
                     @endif

@@ -7,10 +7,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @Getter
 public class UrlsPage extends BasePage {
     private List<Url> urlList;
-    private List<UrlCheck> lastUrlChecksList;
+    private Map<Long, UrlCheck> urlLastChecksMap;
 }

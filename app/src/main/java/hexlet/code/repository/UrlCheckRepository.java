@@ -11,7 +11,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class UrlCheckRepository extends BaseRepository {
     public static void save(UrlCheck urlCheck) {
@@ -62,12 +64,12 @@ public class UrlCheckRepository extends BaseRepository {
         }
     }
 
-    public static List<UrlCheck> getOnlyLastEntities() throws IOException {
-        String sql = Utils.readFileFromResources("getOnlyLastChecks.sql");
+    public static Map<Long, UrlCheck> getLastChecks() throws IOException {
+        String sql = Utils.readFileFromResources("getLastChecks.sql");
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             ResultSet resultSet = preparedStatement.executeQuery();
-            List<UrlCheck> result = new ArrayList<>();
+            Map<Long, UrlCheck> result = new LinkedHashMap<>();
             while (resultSet.next()) {
                 Long urlId = resultSet.getLong("url_id");
                 Long id = resultSet.getLong("id");
@@ -79,7 +81,7 @@ public class UrlCheckRepository extends BaseRepository {
                 UrlCheck urlCheck = new UrlCheck(urlId, statusCode, title,
                         h1, description, createdAt.toLocalDateTime());
                 urlCheck.setId(id);
-                result.add(urlCheck);
+                result.put(urlId, urlCheck);
             }
             return result;
         } catch (SQLException e) {

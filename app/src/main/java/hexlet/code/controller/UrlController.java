@@ -19,9 +19,9 @@ import java.util.List;
 
 public class UrlController {
     public static void index(Context ctx) throws IOException {
-        var urlsList = UrlRepository.getEntities();
-        var lastUrlChecksList = UrlCheckRepository.getOnlyLastEntities();
-        UrlsPage page = new UrlsPage(urlsList, lastUrlChecksList);
+        var urlList = UrlRepository.getEntities();
+        var urlLastChecksMap = UrlCheckRepository.getLastChecks();
+        UrlsPage page = new UrlsPage(urlList, urlLastChecksMap);
         page.setFlashMessage(ctx.consumeSessionAttribute("flash-message"));
         page.setFlashType(ctx.consumeSessionAttribute("flash-type"));
         ctx.render("urls/index.jte", Collections.singletonMap("pageData", page));

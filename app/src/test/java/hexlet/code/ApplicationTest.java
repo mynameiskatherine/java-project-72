@@ -113,11 +113,10 @@ public final class ApplicationTest {
             assertThat(response.code()).isEqualTo(200);
             List<UrlCheck> listOfChecks = UrlCheckRepository.getEntitiesByUrlId(savedUrl.getId());
             assertThat(listOfChecks).isNotEmpty();
-            for (UrlCheck check : listOfChecks) {
-                assertThat(check.getDescription()).isEqualTo("From description");
-                assertThat(check.getH1()).isEqualTo("");
-                assertThat(check.getTitle()).isEqualTo("From title tag");
-            }
+            UrlCheck check = listOfChecks.get(0);
+            assertThat(check.getDescription()).isEqualTo("From description");
+            assertThat(check.getH1()).isEqualTo("");
+            assertThat(check.getTitle()).isEqualTo("From title tag");
         });
     }
 }
